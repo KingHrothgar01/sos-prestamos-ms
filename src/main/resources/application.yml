@@ -1,0 +1,56 @@
+server:
+  port: 8082
+  
+#management endpoints on a separate port
+management:
+  port: 8083
+  security:
+    enabled: false # management port is internal only. no need to secure it.
+    
+user.service:
+  name: 'default profile:'
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:bootexample;MODE=MySQL
+  h2:
+    console:
+      enabled: true
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+    hibernate:
+      ddl-auto: create-drop
+  jpa:
+    defer-datasource-initialization: true
+    show-sql: true
+        
+user.service:
+  name: 'test profile:'
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.100.68/PrestamoPersonal?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=America/Mexico_City
+    username: ppuser
+    password: ppuser@
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      #ddl-auto: update # todo: in non-dev environments, comment this out:
+      
+user.service:
+  name: 'test profile:'
